@@ -4,6 +4,7 @@ public class PlayerController : MonoBehaviour
 {
     public float moveSpeed = 10f; // 자동차의 좌우 이동 속도
     public float laneOffset = 2.5f; // 차선 간 간격 (중앙, 왼쪽, 오른쪽)
+
     public LayerMask gasItemLayer; // 가스 아이템의 레이어
 
     private int currentLane = 1; // 현재 차선 (0: 왼쪽, 1: 중앙, 2: 오른쪽)
@@ -11,14 +12,16 @@ public class PlayerController : MonoBehaviour
 
     void Start()
     {
-        // 초기 위치는 중앙 차선
         UpdateTargetPosition();
     }
 
     void Update()
     {
-        HandleInput();
-        MoveToLane();
+        if (GameManager.Instance != null && GameManager.Instance.isGameRunning)
+        {
+            HandleInput();
+            MoveToLane();
+        }
     }
 
     private void HandleInput()
@@ -38,7 +41,7 @@ public class PlayerController : MonoBehaviour
 
     private void UpdateTargetPosition()
     {
-        // 현재 차선을 기준으로 목표 위치 설정
+        // 현재 차선에 맞는 목표 위치 설정
         targetPosition = new Vector3((currentLane - 1) * laneOffset, transform.position.y, transform.position.z);
     }
 

@@ -1,17 +1,21 @@
-using TMPro;
 using UnityEngine;
+using TMPro;
 using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
-    public static GameManager Instance; // 싱글턴 패턴으로 GameManager 접근
+    public static GameManager Instance;
+    public bool isGameRunning = false; // 게임 실행 상태
 
     public GameObject startPanel; // 게임 시작 패널
     public GameObject gameOverPanel; // 게임 종료 패널
     public TextMeshProUGUI gasText; // 화면에 표시될 gas 텍스트
 
+    public BackgroundMovement backgroundMovement; // 배경 이동 스크립트
+    public ItemSpawner itemSpawner; // 아이템 생성 스크립트
+    public PlayerController playerController; // 플레이어 조작 스크립트
+
     private float gas = 100f; // 초기 gas 값
-    private bool isGameRunning = false; // 게임 실행 상태
 
     private void Awake()
     {
@@ -27,7 +31,11 @@ public class GameManager : MonoBehaviour
         // 초기 패널 설정
         startPanel.SetActive(true);
         gameOverPanel.SetActive(false);
-        gasText.gameObject.SetActive(false); // 게임 시작 시 gasText 비활성화
+
+        // 게임 시작 전에는 모든 게임 요소 비활성화
+        backgroundMovement.enabled = false;
+        itemSpawner.enabled = false;
+        playerController.enabled = false;
     }
 
     private void Update()
@@ -42,18 +50,28 @@ public class GameManager : MonoBehaviour
     {
         // 게임 시작 로직
         startPanel.SetActive(false);
+        gasText.gameObject.SetActive(true);
         isGameRunning = true;
         gas = 100f;
-        gasText.gameObject.SetActive(true); // 게임 시작 시 gasText 활성화
         UpdateGasText();
+
+        // 게임이 시작되면 배경, 아이템 생성, 플레이어 조작 활성화
+        backgroundMovement.enabled = true;
+        itemSpawner.enabled = true;
+        playerController.enabled = true;
     }
 
     public void EndGame()
     {
         // 게임 종료 로직
         isGameRunning = false;
+        gasText.gameObject.SetActive(false);
         gameOverPanel.SetActive(true);
-        gasText.gameObject.SetActive(false); // 게임 종료 시 gasText 비활성화
+
+        // 게임이 종료되면 배경, 아이템 생성, 플레이어 조작 비활성화
+        backgroundMovement.enabled = false;
+        itemSpawner.enabled = false;
+        playerController.enabled = false;
     }
 
     public void RestartGame()
