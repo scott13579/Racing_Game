@@ -16,6 +16,7 @@ public class GameManager : MonoBehaviour
     public PlayerController playerController; // 플레이어 조작 스크립트
 
     private float gas = 100f; // 초기 gas 값
+    
 
     private void Awake()
     {

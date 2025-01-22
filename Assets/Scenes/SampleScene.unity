@@ -3459,8 +3459,9 @@ MonoBehaviour:
   spawnInterval: 2
   spawnZPosition: 20
   laneOffset: 2.5
-  maxSpeed: 30
-  speedIncreaseRate: 0.1
+  initialSpeed: 5
+  maxSpeed: 60
+  speedIncreaseRate: 1
 --- !u!4 &2067168033
 Transform:
   m_ObjectHideFlags: 0
