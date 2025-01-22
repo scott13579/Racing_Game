@@ -10,13 +10,14 @@ public class GameManager : MonoBehaviour
     public GameObject startPanel; // 게임 시작 패널
     public GameObject gameOverPanel; // 게임 종료 패널
     public TextMeshProUGUI gasText; // 화면에 표시될 gas 텍스트
+    public TextMeshProUGUI gameOverScoreText; // 게임 오버 화면에 표시될 이동 거리 텍스트
+    public TextMeshProUGUI scoreText; // 실시간 이동 거리 텍스트
 
     public BackgroundMovement backgroundMovement; // 배경 이동 스크립트
     public ItemSpawner itemSpawner; // 아이템 생성 스크립트
     public PlayerController playerController; // 플레이어 조작 스크립트
 
     private float gas = 100f; // 초기 gas 값
-    
 
     private void Awake()
     {
@@ -32,6 +33,7 @@ public class GameManager : MonoBehaviour
         // 초기 패널 설정
         startPanel.SetActive(true);
         gameOverPanel.SetActive(false);
+        scoreText.gameObject.SetActive(false); // 게임 시작 전에는 scoreText 비활성화
 
         // 게임 시작 전에는 모든 게임 요소 비활성화
         backgroundMovement.enabled = false;
@@ -44,6 +46,7 @@ public class GameManager : MonoBehaviour
         if (isGameRunning)
         {
             UpdateGas();
+            UpdateScoreText(); // 실시간 이동 거리 갱신
         }
     }
 
@@ -52,6 +55,7 @@ public class GameManager : MonoBehaviour
         // 게임 시작 로직
         startPanel.SetActive(false);
         gasText.gameObject.SetActive(true);
+        scoreText.gameObject.SetActive(true);
         isGameRunning = true;
         gas = 100f;
         UpdateGasText();
@@ -60,6 +64,9 @@ public class GameManager : MonoBehaviour
         backgroundMovement.enabled = true;
         itemSpawner.enabled = true;
         playerController.enabled = true;
+
+        // 이동 거리 텍스트 초기화
+        playerController.ResetDistance();
     }
 
     public void EndGame()
@@ -67,7 +74,11 @@ public class GameManager : MonoBehaviour
         // 게임 종료 로직
         isGameRunning = false;
         gasText.gameObject.SetActive(false);
+        scoreText.gameObject.SetActive(false);
         gameOverPanel.SetActive(true);
+
+        // 게임 종료 시 이동 거리 표시
+        gameOverScoreText.text = $"Distance: {Mathf.CeilToInt(playerController.GetDistance())}m";
 
         // 게임이 종료되면 배경, 아이템 생성, 플레이어 조작 비활성화
         backgroundMovement.enabled = false;
@@ -110,5 +121,11 @@ public class GameManager : MonoBehaviour
     {
         // gas 텍스트 업데이트
         gasText.text = $"Gas: {Mathf.CeilToInt(gas)}";
+    }
+
+    private void UpdateScoreText()
+    {
+        // 실시간으로 이동 거리 갱신
+        scoreText.text = $"Distance: {Mathf.CeilToInt(playerController.GetDistance())}m";
     }
 }
