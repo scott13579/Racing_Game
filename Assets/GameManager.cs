@@ -1,6 +1,5 @@
 using TMPro;
 using UnityEngine;
-using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
@@ -28,6 +27,7 @@ public class GameManager : MonoBehaviour
         // 초기 패널 설정
         startPanel.SetActive(true);
         gameOverPanel.SetActive(false);
+        gasText.gameObject.SetActive(false); // 게임 시작 시 gasText 비활성화
     }
 
     private void Update()
@@ -44,6 +44,7 @@ public class GameManager : MonoBehaviour
         startPanel.SetActive(false);
         isGameRunning = true;
         gas = 100f;
+        gasText.gameObject.SetActive(true); // 게임 시작 시 gasText 활성화
         UpdateGasText();
     }
 
@@ -52,6 +53,7 @@ public class GameManager : MonoBehaviour
         // 게임 종료 로직
         isGameRunning = false;
         gameOverPanel.SetActive(true);
+        gasText.gameObject.SetActive(false); // 게임 종료 시 gasText 비활성화
     }
 
     public void RestartGame()
